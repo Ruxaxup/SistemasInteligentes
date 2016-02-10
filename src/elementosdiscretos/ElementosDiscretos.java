@@ -5,6 +5,8 @@
  */
 package elementosdiscretos;
 
+import vista.MainFrame;
+
 /**
  *
  * @author Ruxaxup
@@ -15,7 +17,8 @@ public class ElementosDiscretos {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        MainFrame frame = new  MainFrame();
+        frame.setVisible(true);
     }
     
 }
