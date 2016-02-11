@@ -9,6 +9,6 @@ package interfaces;
  *
  * @author Ruxaxup
  */
-public interface ElementoDiscreto {
+public interface IElementoDiscreto {
     abstract void reglasInteraccion();
 }

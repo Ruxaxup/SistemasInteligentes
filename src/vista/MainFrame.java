@@ -5,6 +5,7 @@
  */
 package vista;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -24,13 +25,21 @@ public class MainFrame extends JFrame{
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setPreferredSize(screenSize);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        initComponents();
         addComponents();
         
         pack();
     }
 
+    private void initComponents() {
+        setLayout(new BorderLayout());
+        
+        //Escenario de elementos discretos
+    }
+    
     private void addComponents() {
         add(new JPanel());
     }
+
+    
 }
