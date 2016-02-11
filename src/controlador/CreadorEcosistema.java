@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package elementosdiscretos;
+package controlador;
 
 import java.awt.Dimension;
 import java.util.Random;
@@ -22,11 +22,16 @@ public class CreadorEcosistema {
     public static double plantas;
     public static double suelo;
     
+    private static long noPlantas;
+    private static long noCarnivoros;
+    private static long noHerbivoros;
+    private static long noSuelo;
+    
     static{
         carnivoros = 0;
         herbivoros = 0;
-        plantas = 0.9;
-        suelo = 0.1;
+        plantas = 0.5;
+        suelo = 0.5;
     }
     
     private static Tipo generateRandomType(){
@@ -45,30 +50,45 @@ public class CreadorEcosistema {
             switch(tipo){
                 //Planta
                 case PLANTA:
-                    if(plantas != 0.0){
-                        exists = true;
+                    //Probabilidad del ED es mayor a cero
+                    if(plantas > 0.0){
+                        //Aun se pueden producir
+                        if(noPlantas > 0){
+                            exists = true;                         
+                            noPlantas--;
+                        }
+                            
                     }
                     break;
                 //Suelo
                 case SUELO:
-                    if(suelo != 0.0){
-                        exists = true;
+                    if(suelo > 0.0){
+                        if(noSuelo > 0){
+                            exists = true;                         
+                            noSuelo--;
+                        }
                     }
                     break;
                 //Carnivoro
                 case TIRANOSAURIO:
                 case CARNOTAURO:
                 case VELOCIRAPTOR:
-                    if(carnivoros != 0.0){
-                        exists = true;
+                    if(carnivoros > 0.0){
+                        if(noCarnivoros > 0){
+                            exists = true;                         
+                            noCarnivoros--;
+                        }
                     }
                     break;
                 //Herbivoro
                 case DIPLODOCUS:
                 case TRICERATOPS:
                 case GALLIMIMUS:
-                    if(herbivoros != 0.0){
-                        exists = true;
+                    if(herbivoros > 0.0){
+                        if(noHerbivoros > 0){
+                            exists = true;                         
+                            noHerbivoros--;
+                        }
                     }
                     break;
             }
@@ -76,15 +96,14 @@ public class CreadorEcosistema {
         return tipo;
     }
     
-    public static ElementoDiscreto[][] getEcosistema(Dimension size){
-        
+    public static ElementoDiscreto[][] getEcosistema(Dimension size){        
         
         long totalElementos = size.height * size.width;
         //Contador de elementos segun el tipo (falta desglozar carn y herb)
-        long noPlantas = (long) (totalElementos * plantas);
-        long noCarnivoros = (long) (totalElementos * carnivoros);
-        long noHerbivoros = (long) (totalElementos * herbivoros);
-        long noSuelo = (long) (totalElementos * suelo);
+        noPlantas = (long) (totalElementos * plantas);
+        noCarnivoros = (long) (totalElementos * carnivoros);
+        noHerbivoros = (long) (totalElementos * herbivoros);
+        noSuelo = (long) (totalElementos * suelo);
         
         //Inicializacion de la matriz
         ElementoDiscreto [][] elementos = new ElementoDiscreto[size.width][size.height];

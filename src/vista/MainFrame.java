@@ -8,6 +8,7 @@ package vista;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -16,6 +17,8 @@ import javax.swing.JPanel;
  * @author Ruxaxup
  */
 public class MainFrame extends JFrame{
+    EscenarioPanel escenarioP;
+    
     public MainFrame(){
         super("Elementos discretos");
         init();        
@@ -23,7 +26,8 @@ public class MainFrame extends JFrame{
 
     private void init() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setPreferredSize(screenSize);
+        //this.setPreferredSize(screenSize);
+        this.setPreferredSize(new Dimension(500,500));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
         addComponents();
@@ -35,10 +39,13 @@ public class MainFrame extends JFrame{
         setLayout(new BorderLayout());
         
         //Escenario de elementos discretos
+        escenarioP = new EscenarioPanel(new Dimension(100, 100));
     }
     
     private void addComponents() {
-        add(new JPanel());
+        add(BorderLayout.EAST, new JButton());
+        add(BorderLayout.WEST, new JButton());
+        add(BorderLayout.CENTER, escenarioP);
     }
 
     
