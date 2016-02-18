@@ -6,7 +6,7 @@
 
 package vista;
 
-import controlador.CreadorEcosistema;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -27,20 +27,12 @@ public class EscenarioPanel extends JPanel{
     ElementoDiscreto [][] elementoDiscreto;
 
     public EscenarioPanel(Dimension size){
-        setPreferredSize(new Dimension(200,200));
+        setPreferredSize(new Dimension(300,300));
         setBackground(Color.black);
-        this.size = size;
-        //Tamaño de los elementos sera de 2x2 pixeles
-        g_elemDiscreto_size = new Dimension(8, 8);        
-        CreadorEcosistema.plantas = 0.3;
-        CreadorEcosistema.suelo = 0.0;
-        CreadorEcosistema.carnivoros = 0.2;
-        CreadorEcosistema.herbivoros = 0.5;
-        elementoDiscreto = CreadorEcosistema.getEcosistema(size);
-        
+        this.size = size;        
     }
     
-    @Override
+    /*@Override
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
         super.paint(g);
@@ -51,41 +43,37 @@ public class EscenarioPanel extends JPanel{
             }            
         }
         g.dispose();
-    }
+    }*/
     
     void pintaElementoDiscreto(ElementoDiscreto ed, Graphics2D g, int x, int y){
         //segun sea el tipo, asignamos un color
         Color c = Color.black;
-        switch(ed.getTipo()){
-            case PLANTA:
-                c = Color.GREEN;
+        switch(ed.getTipo()){            
+            case LARVA_OBRERA:
                 break;
-            case SUELO:
-                c = Color.GRAY;
+            case LARVA_ZANGANO:
                 break;
-            case TIRANOSAURIO:
-                c = Color.RED;
+            case LARVA_REINA:
                 break;
-            case VELOCIRAPTOR:
-                c = Color.ORANGE;
+            case ABEJA_ZANGANO:
                 break;
-            case CARNOTAURO:
-                c = Color.YELLOW;
+            case ABEJA_REINA:
                 break;
-            case GALLIMIMUS:
-                c = Color.PINK;
+            case ABEJA_OBRERA:
                 break;
-            case DIPLODOCUS:
-                c = Color.BLUE;
+            case ABEJA_NODRIZA:
                 break;
-            case TRICERATOPS:
-                c = Color.MAGENTA;
+            case ABEJA_ALMACENERA:
                 break;
+            case ABEJA_CERERA:
+                break;
+            case ABEJA_CENTINELA:
+                break;
+            case ABEJA_LIBADORA:
+                break;
+            default:
+                throw new AssertionError(ed.getTipo().name());
         }
-        g.setColor(c);
-        int width = g_elemDiscreto_size.width;
-        int height = g_elemDiscreto_size.height;
-        g.fillRect(x * width, y * height, width, height);
     }
     
     

@@ -26,8 +26,8 @@ public class MainFrame extends JFrame{
 
     private void init() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        //this.setPreferredSize(screenSize);
-        this.setPreferredSize(new Dimension(500,500));
+        this.setPreferredSize(screenSize);
+        //this.setPreferredSize(new Dimension(500,500));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
         addComponents();
@@ -39,7 +39,7 @@ public class MainFrame extends JFrame{
         setLayout(new BorderLayout());
         
         //Escenario de elementos discretos
-        escenarioP = new EscenarioPanel(new Dimension(100, 100));
+        escenarioP = new EscenarioPanel(new Dimension(10, 10));
     }
     
     private void addComponents() {

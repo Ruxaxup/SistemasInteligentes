@@ -22,8 +22,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
      * Plantas
      */
     public static enum Tipo{
-        PLANTA, SUELO, TIRANOSAURIO, CARNOTAURO, VELOCIRAPTOR, DIPLODOCUS,
-        TRICERATOPS, GALLIMIMUS
+        LARVA_OBRERA, LARVA_ZANGANO, LARVA_REINA,
+        ABEJA_ZANGANO, ABEJA_REINA,
+        ABEJA_OBRERA, ABEJA_NODRIZA, ABEJA_ALMACENERA, ABEJA_CERERA, ABEJA_CENTINELA,
+        ABEJA_LIBADORA
     }
     
     private Tipo tipo;
@@ -39,28 +41,37 @@ public class ElementoDiscreto implements IElementoDiscreto{
     @Override
     public void reglasInteraccion() {
         switch (tipo) {
-            case PLANTA:
+            case LARVA_OBRERA:
                 
                 break;
-            case SUELO:
+            case LARVA_ZANGANO:
                 
                 break;
-            case TIRANOSAURIO:
+            case LARVA_REINA:
                 
                 break;
-            case CARNOTAURO:
+            case ABEJA_ZANGANO:
                 
                 break;
-            case VELOCIRAPTOR:
+            case ABEJA_REINA:
                 
                 break;
-            case DIPLODOCUS:
+            case ABEJA_OBRERA:
                 
                 break;
-            case TRICERATOPS:
+            case ABEJA_NODRIZA:
                 
                 break;
-            case GALLIMIMUS:
+            case ABEJA_ALMACENERA:
+                
+                break;
+            case ABEJA_CERERA:
+                
+                break;
+            case ABEJA_CENTINELA:
+                
+                break;    
+            case ABEJA_LIBADORA:
                 
                 break;
             default:
