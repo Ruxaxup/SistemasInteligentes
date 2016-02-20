@@ -27,7 +27,7 @@ public class EscenarioPanel extends JPanel{
     ElementoDiscreto [][] elementoDiscreto;
 
     public EscenarioPanel(Dimension size){
-        setPreferredSize(new Dimension(300,300));
+        setPreferredSize(new Dimension(840,450));
         setBackground(Color.black);
         this.size = size;        
     }
