@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import modelo.ElementoDiscreto;
+import utils.GeneraEcosistema;
 
 /**
  *
@@ -27,53 +28,62 @@ public class EscenarioPanel extends JPanel{
     ElementoDiscreto [][] elementoDiscreto;
 
     public EscenarioPanel(Dimension size){
-        setPreferredSize(new Dimension(840,450));
+        setPreferredSize(size);
         setBackground(Color.black);
         this.size = size;        
+        g_elemDiscreto_size = new Dimension(10,10);
+        elementoDiscreto = new ElementoDiscreto[size.width][size.height];
+        elementoDiscreto = GeneraEcosistema.test(size);
     }
     
-    /*@Override
+    private void printGrid(int index, Graphics2D g2D){
+        g2D.setColor(Color.LIGHT_GRAY);
+        g2D.drawLine(index * g_elemDiscreto_size.width, 0,
+                         index * g_elemDiscreto_size.width, size.height);
+        g2D.drawLine(0, index * g_elemDiscreto_size.width,
+                     size.width, index * g_elemDiscreto_size.width);
+    }
+    
+    @Override
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
         super.paint(g);
         //Para cada elemento de la matriz, se pinta segun sea su tipo
-        for (int i = 0; i < elementoDiscreto.length; i++) {
+        
+        for (int i = 0; i < elementoDiscreto.length; i++) {                        
             for (int j = 0; j < elementoDiscreto.length; j++) {
                 pintaElementoDiscreto(elementoDiscreto[i][j], g2D, i, j);                
             }            
         }
+        for (int i = 0; i < elementoDiscreto.length; i++) {
+            printGrid(i, g2D);
+        }
         g.dispose();
-    }*/
+    }
     
     void pintaElementoDiscreto(ElementoDiscreto ed, Graphics2D g, int x, int y){
         //segun sea el tipo, asignamos un color
         Color c = Color.black;
         switch(ed.getTipo()){            
-            case LARVA_OBRERA:
+            case AGUA:
+                c = Color.BLUE.brighter();
                 break;
-            case LARVA_ZANGANO:
+            case GARZA:
+                c = Color.WHITE;
                 break;
-            case LARVA_REINA:
+            case JAIBA:
+                c = Color.RED;
                 break;
-            case ABEJA_ZANGANO:
+            case CAMARON:
+                c = Color.ORANGE;
                 break;
-            case ABEJA_REINA:
-                break;
-            case ABEJA_OBRERA:
-                break;
-            case ABEJA_NODRIZA:
-                break;
-            case ABEJA_ALMACENERA:
-                break;
-            case ABEJA_CERERA:
-                break;
-            case ABEJA_CENTINELA:
-                break;
-            case ABEJA_LIBADORA:
-                break;
+            
             default:
                 throw new AssertionError(ed.getTipo().name());
         }
+        g.setColor(c);
+        g.fillRect(x * g_elemDiscreto_size.width, y * g_elemDiscreto_size.height,
+                   g_elemDiscreto_size.width, g_elemDiscreto_size.height);
     }
     
     
