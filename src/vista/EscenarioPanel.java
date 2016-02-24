@@ -29,16 +29,21 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     //tamaño del elemento graficamente (pixeles)
     Dimension ED_size;
     //Matriz de elementos discretos
-    ElementoDiscreto [][] elementoDiscreto;
+    public ElementoDiscreto [][] ed;
 
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
         setBackground(Color.black);
         this.size = size;        
         this.ED_size = ED_size;
-        elementoDiscreto = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
-        elementoDiscreto = GeneraEcosistema.test(size);
-        System.out.println("Dimension de la matriz: "+elementoDiscreto.length );
+        ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
+        ed = GeneraEcosistema.test(new Dimension(100, 100));
+        //GeneraEcosistema.generaAgua(ed);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .4);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.GARZA, this, 2, 1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .3);
+        System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
     }
     
@@ -56,12 +61,12 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         super.paint(g);
         //Para cada elemento de la matriz, se pinta segun sea su tipo
         
-        for (int i = 0; i < elementoDiscreto.length; i++) {                        
-            for (int j = 0; j < elementoDiscreto.length; j++) {
-                pintaElementoDiscreto(elementoDiscreto[i][j], g2D, i, j);                
+        for (int i = 0; i < ed.length; i++) {                        
+            for (int j = 0; j < ed.length; j++) {
+                pintaElementoDiscreto(ed[i][j], g2D, i, j);                
             }            
         }
-        for (int i = 0; i < elementoDiscreto.length; i++) {
+        for (int i = 0; i < ed.length; i++) {
             printGrid(i, g2D);
         }
         g2D.setColor(Color.red);

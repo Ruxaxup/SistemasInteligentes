@@ -29,6 +29,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
         this.tipo = tipo;
     }
     
+    public void setTipo(Tipo tipo){
+        this.tipo = tipo;
+    }
+    
     public Tipo getTipo(){
         return tipo;
     }
