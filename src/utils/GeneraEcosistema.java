@@ -2,6 +2,7 @@ package utils;
 
 
 import java.awt.Dimension;
+import java.awt.Point;
 import modelo.ElementoDiscreto;
 
 /*
@@ -15,6 +16,10 @@ import modelo.ElementoDiscreto;
  * @author Ruxaxup
  */
 public class GeneraEcosistema {
+    public static Point spawnJaiba;
+    public static Point spawnCamaron;
+    public static Point spawnGarza;
+    
     public static ElementoDiscreto[][] test(Dimension size){
         ElementoDiscreto[][] ecosistema = new ElementoDiscreto[size.width][size.height];
         for (int i = 0; i < ecosistema.length; i++) {
@@ -24,4 +29,6 @@ public class GeneraEcosistema {
         }
         return ecosistema;
     }
+    
+    
 }
