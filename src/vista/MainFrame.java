@@ -48,7 +48,7 @@ public class MainFrame extends JFrame{
            
         
         //Escenario de elementos discretos
-        escenarioP = new EscenarioPanel(new Dimension(500, 500));
+        escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));
         
         //Cuadros de información
         informacionReina = new InformacionPanel (new Dimension(70,70), Color.red);
