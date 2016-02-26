@@ -15,6 +15,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import modelo.ElementoDiscreto;
 import utils.GeneraEcosistema;
@@ -40,11 +42,29 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         ed = GeneraEcosistema.test(new Dimension(100, 100));
         //GeneraEcosistema.generaAgua(ed);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .4);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.GARZA, this, 2, 1);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .3);
+        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 2, .4);
+        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.GARZA, this, 3, .01);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .1);
         System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
+    }
+    
+    public void runPainter(){
+        //Thread t = new Thread(new Painter());
+        //t.run();
+        //while(true){
+            for(int i = 0; i < ed.length; i++){
+                for(int j = 0; j < ed.length; j++){
+                    ed[i][j].mover(ed, i, j);
+                }
+            }
+            repaint();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(EscenarioPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        //}
     }
     
     private void printGrid(int index, Graphics2D g2D){
@@ -96,6 +116,17 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         g.setColor(c);
         g.fillRect(x * ED_size.width, y * ED_size.height,
                    ED_size.width, ED_size.height);
+    }
+    
+    private class Painter implements Runnable{
+        
+        @Override
+        public void run() {
+            while(true){
+                repaint();
+            }
+        }
+        
     }
 
     @Override

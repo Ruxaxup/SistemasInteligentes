@@ -5,10 +5,12 @@
  */
 package interfaces;
 
+import modelo.ElementoDiscreto;
+
 /**
  *
  * @author Ruxaxup
  */
 public interface IElementoDiscreto {
-    abstract void reglasInteraccion();
+    abstract void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j);
 }

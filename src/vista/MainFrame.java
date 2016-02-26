@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Label;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,7 +22,8 @@ import javax.swing.JPanel;
  *
  * @author Ruxaxup
  */
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame implements ActionListener{
+    JButton bStart;
     EscenarioPanel escenarioP;
     InformacionPanel informacionReina;
     InformacionPanel informacionObreras;
@@ -42,13 +45,21 @@ public class MainFrame extends JFrame{
         
         pack();
     }
-
+    
+    public void runPainter(){
+        escenarioP.runPainter();
+    }
+    
     private void initComponents() {
         setLayout(new GridBagLayout());
            
         
         //Escenario de elementos discretos
         escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));
+        
+        //Botones
+        bStart = new JButton("Start");
+        bStart.addActionListener(this);
         
         //Cuadros de información
         informacionReina = new InformacionPanel (new Dimension(70,70), Color.red);
@@ -63,11 +74,18 @@ public class MainFrame extends JFrame{
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(escenarioP);
-        
+        add(bStart);
         //add(BorderLayout.PAGE_START, new Label("Colmena"));
         //add(BorderLayout.EAST, informacionP);
         //add(BorderLayout.WEST, new JButton());
         //add(BorderLayout.CENTER, escenarioP);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == bStart){
+            //escenarioP.runPainter();
+        }
     }
 
     
