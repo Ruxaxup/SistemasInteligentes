@@ -19,7 +19,7 @@ public class ElementosDiscretos {
     public static void main(String[] args) {
         MainFrame frame = new  MainFrame();
         frame.setVisible(true);
-        frame.runPainter();
+        //frame.runPainter();
     }
     
 }

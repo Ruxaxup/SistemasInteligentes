@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import java.util.HashMap;
 import modelo.ElementoDiscreto;
 
 /**
@@ -13,4 +14,5 @@ import modelo.ElementoDiscreto;
  */
 public interface IElementoDiscreto {
     abstract void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j);
+    abstract void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico);
 }

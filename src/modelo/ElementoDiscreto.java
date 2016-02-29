@@ -8,6 +8,7 @@ package modelo;
 
 import interfaces.IElementoDiscreto;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,6 +19,11 @@ import static modelo.ElementoDiscreto.Tipo.AGUA;
  * @author Ruxaxup
  */
 public class ElementoDiscreto implements IElementoDiscreto{
+
+    @Override
+    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     /**
      * Tipos de elementos discretos en el ecosistema
@@ -27,6 +33,8 @@ public class ElementoDiscreto implements IElementoDiscreto{
     public static enum Tipo{
         AGUA, GARZA, JAIBA, CAMARON
     }
+    
+    
     
     private Tipo tipo;
     
@@ -65,17 +73,19 @@ public class ElementoDiscreto implements IElementoDiscreto{
         return null;
     }
      
-    public void mover(ElementoDiscreto[][] vecindario, int i, int j){
+    public void mover(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico){
         Random rand = new Random();
         //int randomNum = rand.nextInt((max - min) + 1) + min;
         Point posVecino;
-        ElementoDiscreto vecinoED;
+        ElementoDiscreto vecinoED, aux;
         Set<Integer> visitados = new TreeSet<>();
+        
         int min = 0;
         int max = 7;
         boolean posible = false;
         while(!posible && visitados.size() < 8){
             int vecino = rand.nextInt((max - min) + 1) + min;
+            estadistico.put(vecino,estadistico.get(vecino) + 1);
             if(visitados.contains(vecino)){
                 continue;
             }
@@ -83,8 +93,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
                 posVecino = getVecino(vecindario, i, j, vecino); 
                 vecinoED = vecindario[posVecino.x][posVecino.y];
                 if(vecinoED.getTipo() == AGUA){
-                    vecindario[posVecino.x][posVecino.y].setTipo(Tipo.CAMARON);
-                    vecindario[i][j].setTipo(AGUA);
+                    //Intercambio
+                    aux = vecindario[i][j];
+                    vecindario[i][j] = vecinoED;
+                    vecindario[posVecino.x][posVecino.y] = aux;
                     posible = true;
                 }else{
                     visitados.add(new Integer(vecino));
@@ -97,7 +109,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
     }
     
     @Override
-    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j) {
+    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico) {
         switch (tipo) {
             case AGUA:
                 break;
@@ -106,7 +118,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
             case JAIBA:
                 break;
             case CAMARON:
-                mover(vecindario, i, j);
+                mover(vecindario, i, j, estadistico);
                 break;
             
             default:

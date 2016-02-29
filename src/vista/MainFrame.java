@@ -84,7 +84,10 @@ public class MainFrame extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == bStart){
-            //escenarioP.runPainter();
+            Thread t = new Thread(() -> {
+                escenarioP.runPainter();                
+            });
+            t.start();
         }
     }
 

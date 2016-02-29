@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -32,7 +33,8 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     Dimension ED_size;
     //Matriz de elementos discretos
     public ElementoDiscreto [][] ed;
-
+    public HashMap<Integer,Integer> estadistico;
+    
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
         setBackground(Color.black);
@@ -41,30 +43,44 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
         ed = GeneraEcosistema.test(new Dimension(100, 100));
         //GeneraEcosistema.generaAgua(ed);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .8);
         //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 2, .4);
         //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.GARZA, this, 3, .01);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .6);
         System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
+        
+        estadistico = new HashMap<>();
+        estadistico.put(new Integer(0), new Integer(0));
+        estadistico.put(new Integer(1), new Integer(0));
+        estadistico.put(new Integer(2), new Integer(0));
+        estadistico.put(new Integer(3), new Integer(0));
+        estadistico.put(new Integer(4), new Integer(0));
+        estadistico.put(new Integer(5), new Integer(0));
+        estadistico.put(new Integer(6), new Integer(0));
+        estadistico.put(new Integer(7), new Integer(0));
+        
     }
     
     public void runPainter(){
-        //Thread t = new Thread(new Painter());
-        //t.run();
-        //while(true){
+        int k = 0;
+        System.out.println("Painter");
+        while(k < 10000000){
             for(int i = 0; i < ed.length; i++){
                 for(int j = 0; j < ed.length; j++){
-                    ed[i][j].mover(ed, i, j);
+                    ed[i][j].mover(ed, i, j, estadistico);
                 }
             }
-            repaint();
-            try {
-                Thread.sleep(1000);
+            //repaint();
+            //System.out.println(k);
+            k++;
+            /*try {
+                Thread.sleep(50);
             } catch (InterruptedException ex) {
                 Logger.getLogger(EscenarioPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        //}
+            }*/
+        }
+        System.out.println(estadistico);
     }
     
     private void printGrid(int index, Graphics2D g2D){
@@ -119,11 +135,14 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     }
     
     private class Painter implements Runnable{
-        
+        JPanel p;
+        public Painter (JPanel p){
+            this.p = p;
+        }
         @Override
         public void run() {
             while(true){
-                repaint();
+                p.repaint();
             }
         }
         
