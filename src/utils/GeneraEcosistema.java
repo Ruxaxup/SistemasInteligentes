@@ -35,7 +35,7 @@ public class GeneraEcosistema {
     
     public static void GeneraEcosistema(Tipo tipo, EscenarioPanel ep ,int cuadrante, double percent){
         int minX = 0, minY = 0, maxX = 0, maxY = 0;
-        int gap = (int) ((ep.ed.length/2)*.2);
+        int gap = (int) ((ep.ed.length/2)*.4);
         int center = (ep.ed.length/2);
         int area, cantED;
         //int random;

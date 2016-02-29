@@ -43,10 +43,10 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
         ed = GeneraEcosistema.test(new Dimension(100, 100));
         //GeneraEcosistema.generaAgua(ed);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .8);
-        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 2, .4);
-        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.GARZA, this, 3, .01);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .6);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
+        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 2, .8);
+        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .1);
         System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
         
@@ -64,21 +64,34 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     
     public void runPainter(){
         int k = 0;
+        int ciclos = 0;
         System.out.println("Painter");
-        while(k < 10000000){
+        while(k < 1000){
             for(int i = 0; i < ed.length; i++){
                 for(int j = 0; j < ed.length; j++){
-                    ed[i][j].mover(ed, i, j, estadistico);
+                    if(!ed[i][j].areRulesExecuted())
+                        ed[i][j].reglasInteraccion(ed, i, j, estadistico);
                 }
             }
-            //repaint();
-            //System.out.println(k);
+            ciclos++;
+            
+            for (ElementoDiscreto[] ed1 : ed) {
+                for (int j = 0; j < ed.length; j++) {
+                    ed1[j].clearRulesExecuted();
+                    if(ciclos == 10){
+                        ed1[j].clearPastPositions();
+                        ed1[j].clearCoordenadaAnterior();
+                        ciclos = 0;
+                    }
+                }
+            }
+            repaint();
             k++;
-            /*try {
-                Thread.sleep(50);
+            try {
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(EscenarioPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+            }
         }
         System.out.println(estadistico);
     }
@@ -95,8 +108,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
         super.paint(g);
-        //Para cada elemento de la matriz, se pinta segun sea su tipo
-        
+        //Para cada elemento de la matriz, se pinta segun sea su tipo        
         for (int i = 0; i < ed.length; i++) {                        
             for (int j = 0; j < ed.length; j++) {
                 pintaElementoDiscreto(ed[i][j], g2D, i, j);                
@@ -124,8 +136,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
                 break;
             case CAMARON:
                 c = Color.ORANGE;
-                break;
-            
+                break;            
             default:
                 throw new AssertionError(ed.getTipo().name());
         }
