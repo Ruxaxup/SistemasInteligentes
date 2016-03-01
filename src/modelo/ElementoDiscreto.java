@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import static modelo.ElementoDiscreto.Tipo.AGUA;
-
+import static modelo.ElementoDiscreto.Tipo.CAMARON;
 /**
  *
  * @author Ruxaxup
@@ -133,23 +133,54 @@ public class ElementoDiscreto implements IElementoDiscreto{
         Random rand = new Random();
         //int randomNum = rand.nextInt((max - min) + 1) + min;
         Point posVecino;
-        ElementoDiscreto vecinoED, aux;
-        Set<Integer> visitados = new TreeSet<>();        
+        Point posVecinoCom;
+        ElementoDiscreto vecinoED, vecinoEDCom, aux;
+        Set<Integer> visitados = new TreeSet<>();   
+        Set<Integer> visitadosCom = new TreeSet<>(); 
         int min = 0;
         int max = 3;
         
+        int minCom = 0;
+        int maxCom = 7;
+        
+        while(visitadosCom.size() < 7){
+            int vecinoCom = rand.nextInt((maxCom - minCom) + 1) + minCom;
+            try{
+            
+            posVecinoCom = getVecino(vecindario, i, j, vecinoCom); 
+            vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
+            if(coordenadaAnterior.contains(posVecinoCom)){
+                    visitadosCom.add(new Integer(vecinoCom));
+                    continue;
+                }
+                if(vecinoEDCom.getTipo() == CAMARON){
+                    //come
+                    vecinoEDCom.setTipo(AGUA);
+                }else{
+                    visitadosCom.add(new Integer(vecinoCom));
+                } 
+                
+                }catch(ArrayIndexOutOfBoundsException e){
+                posible = false;
+                visitadosCom.add(new Integer(vecinoCom));
+            }
+        }
+        
         while(!posible && visitados.size() < 4){
-            int vecino = rand.nextInt((max - min) + 1) + min;          
+            int vecino = rand.nextInt((max - min) + 1) + min;    
+            
             if(visitados.contains(vecino)){
                 continue;
             }
             try{
                 posVecino = getVecino(vecindario, i, j, vecino); 
+               
                 if(coordenadaAnterior.contains(posVecino)){
                     visitados.add(new Integer(vecino));
                     continue;
                 }
                 vecinoED = vecindario[posVecino.x][posVecino.y];
+                
                 if(vecinoED.getTipo() == AGUA){
                     //Intercambio
                     aux = vecindario[i][j];
@@ -184,11 +215,12 @@ public class ElementoDiscreto implements IElementoDiscreto{
                 if(moverCamaron(vecindario, i, j)){
                     vecindario[i][j].addLastPosition(new Point(i,j));
                 }
-                rulesExecuted = true;
+                
                 break;
             
             default:
                 throw new AssertionError();
         }
+        rulesExecuted = true;
     }
 }
