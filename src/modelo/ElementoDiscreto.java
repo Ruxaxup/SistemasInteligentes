@@ -136,33 +136,23 @@ public class ElementoDiscreto implements IElementoDiscreto{
         Point posVecinoCom;
         ElementoDiscreto vecinoED, vecinoEDCom, aux;
         Set<Integer> visitados = new TreeSet<>();   
-        Set<Integer> visitadosCom = new TreeSet<>(); 
+
         int min = 0;
         int max = 3;
         
-        int minCom = 0;
-        int maxCom = 7;
-        
-        while(visitadosCom.size() < 7){
-            int vecinoCom = rand.nextInt((maxCom - minCom) + 1) + minCom;
+        for(int k=0;k<7;k++){
             try{
             
-            posVecinoCom = getVecino(vecindario, i, j, vecinoCom); 
+            posVecinoCom = getVecino(vecindario, i, j, k); 
             vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
-            if(coordenadaAnterior.contains(posVecinoCom)){
-                    visitadosCom.add(new Integer(vecinoCom));
-                    continue;
-                }
+            
                 if(vecinoEDCom.getTipo() == CAMARON){
                     //come
                     vecinoEDCom.setTipo(AGUA);
-                }else{
-                    visitadosCom.add(new Integer(vecinoCom));
+                    break;
                 } 
-                
                 }catch(ArrayIndexOutOfBoundsException e){
-                posible = false;
-                visitadosCom.add(new Integer(vecinoCom));
+
             }
         }
         
