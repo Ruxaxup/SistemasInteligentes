@@ -14,5 +14,5 @@ import modelo.ElementoDiscreto;
  */
 public interface IElementoDiscreto {
     abstract void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j);
-    abstract void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico);
+    
 }

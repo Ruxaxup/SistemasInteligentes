@@ -23,10 +23,6 @@ import static modelo.ElementoDiscreto.Tipo.AGUA;
  */
 public class ElementoDiscreto implements IElementoDiscreto{
 
-    @Override
-    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     /**
      * Tipos de elementos discretos en el ecosistema
@@ -40,12 +36,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
     private Tipo tipo;
     private boolean rulesExecuted;
     //Se guardaran 4 posiciones anteriores
-    private List<Integer> pastPositions;
     private List<Point> coordenadaAnterior;
     
     public ElementoDiscreto(Tipo tipo){
         this.tipo = tipo;
-        pastPositions = new ArrayList<>();
         coordenadaAnterior = new ArrayList<>();
     }
     
@@ -60,21 +54,21 @@ public class ElementoDiscreto implements IElementoDiscreto{
     public Point getVecino(ElementoDiscreto[][] vecindario, int i, int j, int posicion){
         
         switch (posicion){
-            case 0:
+            case 4:
                 return new Point (i-1,j-1);
-            case 1:
+            case 0:
                 return new Point (i,j-1);
-            case 2:
+            case 5:
                 return new Point (i+1,j-1);
             case 3:
                 return new Point (i+1,j);
-            case 4:
-                return new Point (i+1,j+1);
-            case 5:
-                return new Point (i,j+1);
             case 6:
-                return new Point (i-1,j+1);
+                return new Point (i+1,j+1);
+            case 1:
+                return new Point (i,j+1);
             case 7:
+                return new Point (i-1,j+1);
+            case 2:
                 return new Point (i-1,j);
         }
         return null;
@@ -86,9 +80,6 @@ public class ElementoDiscreto implements IElementoDiscreto{
     public void clearRulesExecuted(){
         rulesExecuted = false;
     }
-    public void clearPastPositions(){
-        pastPositions.clear();
-    }
     public void addLastPosition(Point p){
         if(!coordenadaAnterior.contains(p)){
             coordenadaAnterior.add(p);
@@ -98,7 +89,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
         coordenadaAnterior.clear();
     }
     
-    public boolean mover(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico){
+    public boolean moverCamaron(ElementoDiscreto[][] vecindario, int i, int j){
         Random rand = new Random();
         //int randomNum = rand.nextInt((max - min) + 1) + min;
         Point posVecino;
@@ -109,13 +100,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
         boolean posible = false;
         
         while(!posible && visitados.size() < 8){
-            int vecino = rand.nextInt((max - min) + 1) + min;
-            estadistico.put(vecino,estadistico.get(vecino) + 1);
-            
-            if(pastPositions.contains(vecino)){
-                visitados.add(vecino);
-                continue;
-            }
+            int vecino = rand.nextInt((max - min) + 1) + min;          
             if(visitados.contains(vecino)){
                 continue;
             }
@@ -127,14 +112,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
                 }
                 vecinoED = vecindario[posVecino.x][posVecino.y];
                 if(vecinoED.getTipo() == AGUA){
-                    estadistico.put(vecino,estadistico.get(vecino) + 1);
                     //Intercambio
                     aux = vecindario[i][j];
                     vecindario[i][j] = vecinoED;
                     vecindario[posVecino.x][posVecino.y] = aux;
-                    //Agrega la posicion a la lista
-                    if(!pastPositions.contains(vecino) && pastPositions.size() < 4)
-                        pastPositions.add(vecino);
                     posible = true;
                 }else{
                     visitados.add(new Integer(vecino));
@@ -147,17 +128,60 @@ public class ElementoDiscreto implements IElementoDiscreto{
         return posible;
     }
     
+    public boolean moverJaiba(ElementoDiscreto[][] vecindario, int i, int j){
+        boolean posible = false;
+        Random rand = new Random();
+        //int randomNum = rand.nextInt((max - min) + 1) + min;
+        Point posVecino;
+        ElementoDiscreto vecinoED, aux;
+        Set<Integer> visitados = new TreeSet<>();        
+        int min = 0;
+        int max = 3;
+        
+        while(!posible && visitados.size() < 4){
+            int vecino = rand.nextInt((max - min) + 1) + min;          
+            if(visitados.contains(vecino)){
+                continue;
+            }
+            try{
+                posVecino = getVecino(vecindario, i, j, vecino); 
+                if(coordenadaAnterior.contains(posVecino)){
+                    visitados.add(new Integer(vecino));
+                    continue;
+                }
+                vecinoED = vecindario[posVecino.x][posVecino.y];
+                if(vecinoED.getTipo() == AGUA){
+                    //Intercambio
+                    aux = vecindario[i][j];
+                    vecindario[i][j] = vecinoED;
+                    vecindario[posVecino.x][posVecino.y] = aux;
+                    posible = true;
+                }else{
+                    visitados.add(new Integer(vecino));
+                }                
+            }catch(ArrayIndexOutOfBoundsException e){
+                posible = false;
+                visitados.add(new Integer(vecino));
+            }
+        }       
+        
+        return posible;
+    }
+    
     @Override
-    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j, HashMap<Integer,Integer> estadistico) {
+    public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j) {
         switch (tipo) {
             case AGUA:
                 break;
             case GARZA:
                 break;
             case JAIBA:
+                if(moverJaiba(vecindario, i, j)){
+                    vecindario[i][j].addLastPosition(new Point(i,j));
+                }
                 break;
             case CAMARON:
-                if(mover(vecindario, i, j, estadistico)){
+                if(moverCamaron(vecindario, i, j)){
                     vecindario[i][j].addLastPosition(new Point(i,j));
                 }
                 rulesExecuted = true;

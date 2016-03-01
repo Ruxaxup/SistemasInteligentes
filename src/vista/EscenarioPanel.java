@@ -45,7 +45,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         //GeneraEcosistema.generaAgua(ed);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
         //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 2, .8);
-        //GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .1);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .1);
         System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
@@ -70,7 +70,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
             for(int i = 0; i < ed.length; i++){
                 for(int j = 0; j < ed.length; j++){
                     if(!ed[i][j].areRulesExecuted())
-                        ed[i][j].reglasInteraccion(ed, i, j, estadistico);
+                        ed[i][j].reglasInteraccion(ed, i, j);
                 }
             }
             ciclos++;
@@ -79,7 +79,6 @@ public class EscenarioPanel extends JPanel implements MouseListener{
                 for (int j = 0; j < ed.length; j++) {
                     ed1[j].clearRulesExecuted();
                     if(ciclos == 10){
-                        ed1[j].clearPastPositions();
                         ed1[j].clearCoordenadaAnterior();
                         ciclos = 0;
                     }
