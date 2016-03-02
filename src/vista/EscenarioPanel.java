@@ -21,7 +21,9 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import modelo.ElementoDiscreto;
+import modelo.ElementoDiscreto.Tipo;
 import utils.GeneraEcosistema;
+import utils.NumeroElementos;
 
 /**
  *
@@ -135,6 +137,33 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         g.setColor(c);
         g.fillRect(x * ED_size.width, y * ED_size.height,
                    ED_size.width, ED_size.height);
+    }
+
+    private void cuentaElementosVivos(ElementoDiscreto[][] ed, InformacionPanel cam,
+            InformacionPanel jaibas, InformacionPanel anguilas) {
+        long camaron = 0;
+        long jaiba = 0;
+        long anguila = 0;
+        
+        for (ElementoDiscreto[] ed1 : ed) {
+            for (ElementoDiscreto ed11 : ed1) {
+                if (ed11.getTipo()== Tipo.CAMARON)
+                    camaron++;
+                if (ed11.getTipo()== Tipo.JAIBA)
+                    jaiba++;
+                if (ed11.getTipo()== Tipo.ANGUILA)
+                    anguila++;
+                
+            }
+        }
+        //Vivos
+        cam.setVivos(camaron);
+        jaibas.setVivos(jaiba);
+        anguilas.setVivos(anguila);
+        //Muertos
+        cam.setMuertos(NumeroElementos.camaronesTotales - camaron);
+        jaibas.setMuertos(NumeroElementos.jaibasTotales - jaiba);
+        anguilas.setMuertos(NumeroElementos.anguilasTotales - anguila);
     }
     
     private class Painter implements Runnable{

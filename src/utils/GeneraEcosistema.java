@@ -66,6 +66,12 @@ public class GeneraEcosistema {
         while(cantED > 0){
             Point p = generaED(minX, maxX, minY, maxY, tipo, ep.ed);
             ep.ed[p.x][p.y].setTipo(tipo);
+            if (tipo == Tipo.CAMARON)
+                NumeroElementos.camaronesTotales++;
+            if (tipo == Tipo.JAIBA)
+                NumeroElementos.jaibasTotales++;
+            if (tipo == Tipo.ANGUILA)
+                NumeroElementos.anguilasTotales++;
             cantED--;
         }
     }

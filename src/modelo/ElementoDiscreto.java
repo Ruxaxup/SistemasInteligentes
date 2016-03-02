@@ -30,7 +30,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
      * Garza, Jaiba azul, camaron
      */
     public static enum Tipo{
-        AGUA, GARZA, JAIBA, CAMARON
+        AGUA, GARZA, JAIBA, CAMARON, ANGUILA
     }
     
     private Tipo tipo;
