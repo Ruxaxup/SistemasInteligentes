@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import modelo.ElementoDiscreto;
 import utils.GeneraEcosistema;
@@ -33,11 +34,10 @@ public class EscenarioPanel extends JPanel implements MouseListener{
     Dimension ED_size;
     //Matriz de elementos discretos
     public ElementoDiscreto [][] ed;
-    public HashMap<Integer,Integer> estadistico;
-    
+            
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
-        setBackground(Color.black);
+        //setBackground(Color.black);
         this.size = size;        
         this.ED_size = ED_size;
         ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
@@ -50,19 +50,11 @@ public class EscenarioPanel extends JPanel implements MouseListener{
         System.out.println("Dimension de la matriz: "+ed.length );
         this.addMouseListener(this);
         
-        estadistico = new HashMap<>();
-        estadistico.put(new Integer(0), new Integer(0));
-        estadistico.put(new Integer(1), new Integer(0));
-        estadistico.put(new Integer(2), new Integer(0));
-        estadistico.put(new Integer(3), new Integer(0));
-        estadistico.put(new Integer(4), new Integer(0));
-        estadistico.put(new Integer(5), new Integer(0));
-        estadistico.put(new Integer(6), new Integer(0));
-        estadistico.put(new Integer(7), new Integer(0));
         
     }
     
-    public void runPainter(){
+    public void runPainter(JButton bStart, InformacionPanel cam,
+            InformacionPanel jaibas, InformacionPanel anguilas){
         int k = 0;
         int ciclos = 0;
         System.out.println("Painter");
@@ -85,6 +77,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
                 }
             }
             repaint();
+            cuentaElementosVivos(ed, cam, jaibas, anguilas);
             k++;
             try {
                 Thread.sleep(100);
@@ -92,7 +85,7 @@ public class EscenarioPanel extends JPanel implements MouseListener{
                 Logger.getLogger(EscenarioPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(estadistico);
+        bStart.setEnabled(true);
     }
     
     private void printGrid(int index, Graphics2D g2D){

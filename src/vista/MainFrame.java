@@ -25,10 +25,9 @@ import javax.swing.JPanel;
 public class MainFrame extends JFrame implements ActionListener{
     JButton bStart;
     EscenarioPanel escenarioP;
-    InformacionPanel informacionReina;
-    InformacionPanel informacionObreras;
-    InformacionPanel informacionZanganos;
-    InformacionPanel informacionLarvas;
+    InformacionPanel informacionCam;
+    InformacionPanel informacionJaiba;
+    InformacionPanel informacionAnguila;
     
     public MainFrame(){
         super("Elementos discretos");
@@ -41,18 +40,16 @@ public class MainFrame extends JFrame implements ActionListener{
         //this.setPreferredSize(new Dimension(800,500));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
-        addComponents();
-        
+        addComponents();        
         pack();
     }
     
-    public void runPainter(){
-        escenarioP.runPainter();
-    }
+    /*public void runPainter(){
+        escenarioP.runPainter(bStart);
+    }*/
     
     private void initComponents() {
-        setLayout(new GridBagLayout());
-           
+        setLayout(new GridBagLayout());       
         
         //Escenario de elementos discretos
         escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));
@@ -62,32 +59,52 @@ public class MainFrame extends JFrame implements ActionListener{
         bStart.addActionListener(this);
         
         //Cuadros de información
-        informacionReina = new InformacionPanel (new Dimension(70,70), Color.red);
-        informacionObreras = new InformacionPanel (new Dimension(70,70), Color.blue);
-        informacionZanganos = new InformacionPanel (new Dimension(70,70), Color.green);
-        informacionLarvas = new InformacionPanel (new Dimension(70,70), Color.cyan);
+        informacionCam = new InformacionPanel (new Dimension(200,70), "Camarones");
+        informacionJaiba = new InformacionPanel (new Dimension(200,70), "Jaibas");
+        informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas");
     }
     
     private void addComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.BOTH;        
         gbc.gridx = 0;
+        gbc.gridy = 0;        
+        gbc.gridheight = 3;
+        add(escenarioP,gbc);        
+        
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 1;
         gbc.gridy = 0;
-        add(escenarioP);
-        add(bStart);
-        //add(BorderLayout.PAGE_START, new Label("Colmena"));
-        //add(BorderLayout.EAST, informacionP);
-        //add(BorderLayout.WEST, new JButton());
-        //add(BorderLayout.CENTER, escenarioP);
+        gbc.gridheight = 1;
+        gbc.weighty = 1.0;        
+        add(informacionCam,gbc);
+        
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(informacionJaiba,gbc);
+        
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(informacionAnguila,gbc);
+        
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weighty = 0.0;
+        gbc.gridwidth = 2;
+        add(bStart, gbc);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == bStart){
             Thread t = new Thread(() -> {
-                escenarioP.runPainter();                
+                escenarioP.runPainter(bStart, informacionCam, informacionJaiba, informacionAnguila);                
             });
             t.start();
+            bStart.setEnabled(false);
         }
     }
 

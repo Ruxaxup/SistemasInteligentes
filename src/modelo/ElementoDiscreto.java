@@ -37,6 +37,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
     private boolean rulesExecuted;
     //Se guardaran 4 posiciones anteriores
     private List<Point> coordenadaAnterior;
+    //JAIBA
+    boolean hungry;
+    int comidos;
+    
     
     public ElementoDiscreto(Tipo tipo){
         this.tipo = tipo;
@@ -147,7 +151,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
             vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
             
                 if(vecinoEDCom.getTipo() == CAMARON){
-                    //come
+                    //come, Implementar contador de camarones muertos
                     vecinoEDCom.setTipo(AGUA);
                     break;
                 } 
