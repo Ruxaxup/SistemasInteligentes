@@ -37,6 +37,7 @@ public class MainFrame extends JFrame implements ActionListener{
     InformacionPanel informacionCam;
     InformacionPanel informacionJaiba;
     InformacionPanel informacionAnguila;
+    PanelTiempo pTiempo;
     
     public MainFrame(){
         super("Elementos discretos");
@@ -57,8 +58,7 @@ public class MainFrame extends JFrame implements ActionListener{
         setLayout(new GridBagLayout());       
         
         //Escenario de elementos discretos
-        escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));
-        
+        escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));        
         //Botones
         bStart = new JButton("Start");
         bStart.addActionListener(this);
@@ -70,6 +70,7 @@ public class MainFrame extends JFrame implements ActionListener{
         informacionCam = new InformacionPanel (new Dimension(200,70), "Camarones", Color.ORANGE);
         informacionJaiba = new InformacionPanel (new Dimension(200,70), "Jaibas", Color.RED);
         informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas", Color.MAGENTA);
+        pTiempo = new PanelTiempo();
     }
     
     private void addComponents() {
@@ -77,36 +78,44 @@ public class MainFrame extends JFrame implements ActionListener{
         gbc.fill = GridBagConstraints.BOTH;        
         gbc.gridx = 0;
         gbc.gridy = 0;        
-        gbc.gridheight = 3;
+        gbc.gridheight = 4;
         add(escenarioP,gbc);        
-        
+        //Informacion
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
         gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.weighty = 1.0;        
+        add(pTiempo,gbc);
+        
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
         gbc.gridheight = 1;
         gbc.weighty = 1.0;        
         add(informacionCam,gbc);
         
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         add(informacionJaiba,gbc);
         
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         add(informacionAnguila,gbc);
         
+        //botones
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.weighty = 1.0;
         gbc.gridwidth = 1;
         add(bStart, gbc);
         
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.weighty = 1.0;
         gbc.gridwidth = 1;
         add(bPause, gbc);
@@ -116,7 +125,8 @@ public class MainFrame extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == bStart){
             Thread t = new Thread(() -> {
-                escenarioP.runPainter(bStart, informacionCam, informacionJaiba, informacionAnguila);                
+                escenarioP.runPainter(bStart, informacionCam, informacionJaiba,
+                        informacionAnguila, pTiempo);                
             });
             t.start();
             bStart.setEnabled(false);

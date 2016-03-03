@@ -44,7 +44,7 @@ public class DConfiguraciones extends JDialog implements ActionListener{
     private void initComponents() {
         tfTiempo = new JTextField(10);        
         tfTiempo.setDocument(new JTextFieldFilter(JTextFieldFilter.NUMERIC));
-        tfTiempo.setText("0");
+        tfTiempo.setText("100");
         bClose = new JButton("Close");
         bClose.addActionListener(this);
         

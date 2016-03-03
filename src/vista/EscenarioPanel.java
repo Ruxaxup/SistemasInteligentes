@@ -12,10 +12,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +38,11 @@ public class EscenarioPanel extends JPanel{
     private boolean pause;
     private int threadSleep;
     
+    //Generadores
+    private final int TIEMPO_CAMARON = 48;
+    private final int TIEMPO_JAIBA = 192;
+    private final int TIEMPO_ANGUILA = 288;
+    
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
         threadSleep = 100;
@@ -59,10 +60,14 @@ public class EscenarioPanel extends JPanel{
     }
     
     public void runPainter(JButton bStart, InformacionPanel cam,
-            InformacionPanel jaibas, InformacionPanel anguilas){
+            InformacionPanel jaibas, InformacionPanel anguilas, PanelTiempo pTiempo){
         long ciclosTotales = 0;
         int ciclos = 0;
         pause = false;
+        //Generadores
+        int generaCam = 0;
+        int generaJaiba = 0;
+        int generaAnguila = 0;
         while(!pause){
             for(int i = 0; i < ed.length; i++){
                 for(int j = 0; j < ed.length; j++){
@@ -83,7 +88,24 @@ public class EscenarioPanel extends JPanel{
             repaint();
             cuentaElementosVivos(ed, cam, jaibas, anguilas);
             ciclosTotales++;
+            pTiempo.setTime(ciclosTotales/96);
             ciclos++;
+            generaCam++;
+            generaJaiba++;
+            generaAnguila++;
+            //Generadores
+            if(generaCam < TIEMPO_CAMARON){
+                generaEspecie(Tipo.CAMARON);
+                generaCam = 0;
+            }
+            if(generaJaiba < TIEMPO_JAIBA){
+                generaEspecie(Tipo.JAIBA);
+                generaJaiba = 0;
+            }
+            if(generaAnguila < TIEMPO_ANGUILA){
+                generaEspecie(Tipo.ANGUILA);
+                generaAnguila = 0;
+            }
             try {
                 Thread.sleep(threadSleep);
             } catch (InterruptedException ex) {
@@ -179,6 +201,61 @@ public class EscenarioPanel extends JPanel{
     
     void pauseExecution(){
         pause = true;
+    }
+    
+    //GENERADORES
+    
+    private void generaEspecie(Tipo tipo){
+        Random rand = new Random();
+        int i,j;
+        int max = ed.length;
+        int min = 0;
+        
+        i = rand.nextInt((max - min) + 1) + min;
+        j = rand.nextInt((max - min) + 1) + min;
+        
+        Point[] vecinos = new Point[]{          
+                new Point (i-1,j-1),
+                new Point (i,j-1),
+                new Point (i+1,j-1),
+                new Point (i+1,j),
+                new Point (i+1,j+1),
+                new Point (i,j+1),
+                new Point (i-1,j+1),
+                new Point (i-1,j)
+        };
+        
+        for (Point vecino : vecinos) {
+            try{
+                if (ed[vecino.x][vecino.y].getTipo() == Tipo.AGUA){
+                    if(rand.nextBoolean()){
+                        ed[vecino.x][vecino.y].setTipo(tipo);
+                        switch(tipo){
+                            case AGUA:
+                                break;
+                            case GARZA:
+                                break;
+                            case JAIBA:
+                                NumeroElementos.jaibasTotales++;
+                                break;
+                            case CAMARON:
+                                NumeroElementos.camaronesTotales++;
+                                break;
+                            case ANGUILA:
+                                NumeroElementos.anguilasTotales++;
+                                break;
+                            default:
+                                throw new AssertionError(tipo.name());
+                            
+                        }
+                    }
+                }
+            }catch(ArrayIndexOutOfBoundsException e){
+                
+            }
+        }
+        
+        
     }
     
 }

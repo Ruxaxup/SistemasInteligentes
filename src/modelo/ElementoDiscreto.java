@@ -241,10 +241,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
             case GARZA:
                 break;
             case JAIBA:
-                if(ciclos >= 240){
+                if(ciclos >= 480){
                     //muere
                     mataJaiba();
-                }else if(ciclos >= 8){
+                }else if(ciclos >= 16){
                     hungry = true;
                 }
                 if(hungry){                    
