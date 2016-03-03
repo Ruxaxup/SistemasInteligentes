@@ -11,6 +11,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Label;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +26,13 @@ import javax.swing.JPanel;
  * @author Ruxaxup
  */
 public class MainFrame extends JFrame implements ActionListener{
+    //GUI menus e interacciones
+    MenuBar menuBar;
+    Menu mFile;
+    Menu mConfig;
     JButton bStart;
+    JButton bPause;
+    //GUI para elementos discretos
     EscenarioPanel escenarioP;
     InformacionPanel informacionCam;
     InformacionPanel informacionJaiba;
@@ -37,17 +46,13 @@ public class MainFrame extends JFrame implements ActionListener{
     private void init() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setPreferredSize(screenSize);
-        //this.setPreferredSize(new Dimension(800,500));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
-        addComponents();        
+        addComponents();  
+        createMenu();
         pack();
     }
-    
-    /*public void runPainter(){
-        escenarioP.runPainter(bStart);
-    }*/
-    
+        
     private void initComponents() {
         setLayout(new GridBagLayout());       
         
@@ -57,11 +62,14 @@ public class MainFrame extends JFrame implements ActionListener{
         //Botones
         bStart = new JButton("Start");
         bStart.addActionListener(this);
+        bPause = new JButton("Pause");
+        bPause.addActionListener(this);
+        bPause.setEnabled(false);
         
         //Cuadros de información
-        informacionCam = new InformacionPanel (new Dimension(200,70), "Camarones");
-        informacionJaiba = new InformacionPanel (new Dimension(200,70), "Jaibas");
-        informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas");
+        informacionCam = new InformacionPanel (new Dimension(200,70), "Camarones", Color.ORANGE);
+        informacionJaiba = new InformacionPanel (new Dimension(200,70), "Jaibas", Color.RED);
+        informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas", Color.MAGENTA);
     }
     
     private void addComponents() {
@@ -92,9 +100,16 @@ public class MainFrame extends JFrame implements ActionListener{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.weighty = 0.0;
-        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.gridwidth = 1;
         add(bStart, gbc);
+        
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.weighty = 1.0;
+        gbc.gridwidth = 1;
+        add(bPause, gbc);
     }
 
     @Override
@@ -105,8 +120,30 @@ public class MainFrame extends JFrame implements ActionListener{
             });
             t.start();
             bStart.setEnabled(false);
+            bPause.setEnabled(true);
+        }else if(e.getSource() == bPause){
+            escenarioP.pauseExecution();
+            bPause.setEnabled(false);
         }
     }
 
-    
+    private void createMenu() {
+        MenuItem exit = new MenuItem("Exit");
+        exit.addActionListener((ActionEvent e) -> {
+            System.exit(0);
+        });
+        MenuItem setTime = new MenuItem("Velocidad ejecución");
+        setTime.addActionListener((ActionEvent e) -> {
+            new DConfiguraciones(this,escenarioP).setVisible(true);
+        });
+        menuBar = new MenuBar();
+        mFile = new Menu("File");
+        mConfig = new Menu("Config");
+        
+        mFile.add(exit);
+        mConfig.add(setTime);
+        menuBar.add(mFile);
+        menuBar.add(mConfig);
+        setMenuBar(menuBar);
+    }    
 }
