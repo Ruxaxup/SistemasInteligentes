@@ -37,13 +37,20 @@ public class ElementoDiscreto implements IElementoDiscreto{
     private boolean rulesExecuted;
     //Se guardaran 4 posiciones anteriores
     private List<Point> coordenadaAnterior;
-    //JAIBA
+    private long ciclos;
+    
+//JAIBA
+    private int direccion;
     boolean hungry;
     int comidos;
+    int contDir;
+
     
     
     public ElementoDiscreto(Tipo tipo){
         this.tipo = tipo;
+        hungry = true;
+        direccion = -1;
         coordenadaAnterior = new ArrayList<>();
     }
     
@@ -85,12 +92,13 @@ public class ElementoDiscreto implements IElementoDiscreto{
         rulesExecuted = false;
     }
     public void addLastPosition(Point p){
-        if(!coordenadaAnterior.contains(p)){
+        if(!coordenadaAnterior.contains(p) && coordenadaAnterior.size() < 15){
             coordenadaAnterior.add(p);
         }            
     }
     public void clearCoordenadaAnterior(){
         coordenadaAnterior.clear();
+        coordenadaAnterior = new ArrayList<>();
     }
     
     public boolean moverCamaron(ElementoDiscreto[][] vecindario, int i, int j){
@@ -104,12 +112,21 @@ public class ElementoDiscreto implements IElementoDiscreto{
         boolean posible = false;
         
         while(!posible && visitados.size() < 8){
-            int vecino = rand.nextInt((max - min) + 1) + min;          
+            int vecino = rand.nextInt((max - min) + 1) + min;
+            if(contDir == 5){
+                direccion = -1;
+                contDir = 0;
+            }
+            if(direccion != -1){
+                vecino = direccion;
+                contDir++;
+            }
             if(visitados.contains(vecino)){
                 continue;
             }
             try{
                 posVecino = getVecino(vecindario, i, j, vecino); 
+                direccion = vecino;
                 if(coordenadaAnterior.contains(posVecino)){
                     visitados.add(new Integer(vecino));
                     continue;
@@ -123,10 +140,14 @@ public class ElementoDiscreto implements IElementoDiscreto{
                     posible = true;
                 }else{
                     visitados.add(new Integer(vecino));
+                    contDir = 0;
+                    //resetear contador de direccion
                 }                
             }catch(ArrayIndexOutOfBoundsException e){
                 posible = false;
                 visitados.add(new Integer(vecino));
+                //resetear contador de direccion
+                contDir = 0;
             }
         }   
         return posible;
@@ -137,38 +158,29 @@ public class ElementoDiscreto implements IElementoDiscreto{
         Random rand = new Random();
         //int randomNum = rand.nextInt((max - min) + 1) + min;
         Point posVecino;
-        Point posVecinoCom;
-        ElementoDiscreto vecinoED, vecinoEDCom, aux;
+        
+        ElementoDiscreto vecinoED, aux;
         Set<Integer> visitados = new TreeSet<>();   
 
         int min = 0;
         int max = 3;
         
-        for(int k=0;k<7;k++){
-            try{
-            
-            posVecinoCom = getVecino(vecindario, i, j, k); 
-            vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
-            
-                if(vecinoEDCom.getTipo() == CAMARON){
-                    //come, Implementar contador de camarones muertos
-                    vecinoEDCom.setTipo(AGUA);
-                    break;
-                } 
-                }catch(ArrayIndexOutOfBoundsException e){
-
-            }
-        }
-        
         while(!posible && visitados.size() < 4){
-            int vecino = rand.nextInt((max - min) + 1) + min;    
-            
+            int vecino = rand.nextInt((max - min) + 1) + min;   
+            if(contDir == 10){
+                direccion = -1;
+                contDir = 0;
+            }
+            if(direccion != -1){
+                vecino = direccion;
+                contDir++;
+            }
             if(visitados.contains(vecino)){
                 continue;
             }
             try{
                 posVecino = getVecino(vecindario, i, j, vecino); 
-               
+                direccion = vecino;
                 if(coordenadaAnterior.contains(posVecino)){
                     visitados.add(new Integer(vecino));
                     continue;
@@ -183,14 +195,44 @@ public class ElementoDiscreto implements IElementoDiscreto{
                     posible = true;
                 }else{
                     visitados.add(new Integer(vecino));
+                    contDir = 0;
+                    //resetear contador de direccion
                 }                
             }catch(ArrayIndexOutOfBoundsException e){
                 posible = false;
                 visitados.add(new Integer(vecino));
+                //resetear contador de direccion
+                contDir = 0;
             }
         }       
         
         return posible;
+    }
+    
+    public boolean comerCamaron(ElementoDiscreto[][] vecindario, int i, int j){
+        Point posVecinoCom;
+        ElementoDiscreto vecinoEDCom;
+        boolean posible = false;
+        for(int k=0;k<7;k++){
+            try{            
+                posVecinoCom = getVecino(vecindario, i, j, k); 
+                vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
+            
+                if(vecinoEDCom.getTipo() == CAMARON){
+                    vecinoEDCom.setTipo(AGUA);
+                    posible = true;
+                    break;
+                } 
+            }catch(ArrayIndexOutOfBoundsException e){
+
+            }
+        }
+        return posible;
+    }
+    
+    private void mataJaiba(){
+        setTipo(AGUA);
+        ciclos = 0;
     }
     
     @Override
@@ -201,20 +243,36 @@ public class ElementoDiscreto implements IElementoDiscreto{
             case GARZA:
                 break;
             case JAIBA:
-                if(moverJaiba(vecindario, i, j)){
-                    vecindario[i][j].addLastPosition(new Point(i,j));
+                if(ciclos >= 240){
+                    //muere
+                    mataJaiba();
+                }else if(ciclos >= 8){
+                    hungry = true;
                 }
+                if(hungry){                    
+                    if(moverJaiba(vecindario, i, j)){
+                        addLastPosition(new Point(i,j));
+                    }                
+                    if(comerCamaron(vecindario, i, j)){
+                        hungry = false;
+                        ciclos = 0;
+                    }
+                }
+                ciclos++;
                 break;
             case CAMARON:
                 if(moverCamaron(vecindario, i, j)){
                     vecindario[i][j].addLastPosition(new Point(i,j));
                 }
-                
+                ciclos++;
+                break;
+            case ANGUILA:
+                ciclos++;
                 break;
             
             default:
                 throw new AssertionError();
         }
-        rulesExecuted = true;
+        rulesExecuted = true;        
     }
 }
