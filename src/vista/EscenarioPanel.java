@@ -39,13 +39,14 @@ public class EscenarioPanel extends JPanel{
     private int threadSleep;
     
     //Generadores
-    private final int TIEMPO_CAMARON = 48;
-    private final int TIEMPO_JAIBA = 192;
-    private final int TIEMPO_ANGUILA = 288;
+    private final int TIEMPO_CAMARON = 24;
+    private final int TIEMPO_JAIBA = 384;
+    private final int TIEMPO_ANGUILA = -1;
+    long ciclosTotales = 0;
     
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
-        threadSleep = 100;
+        threadSleep = 1;
         this.size = size;        
         this.ED_size = ED_size;
         ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
@@ -56,12 +57,12 @@ public class EscenarioPanel extends JPanel{
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 2, .8);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .1);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 3, .2);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .1);        
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 4, .1);        
     }
     
     public void runPainter(JButton bStart, InformacionPanel cam,
             InformacionPanel jaibas, InformacionPanel anguilas, PanelTiempo pTiempo){
-        long ciclosTotales = 0;
+        
         int ciclos = 0;
         pause = false;
         //Generadores

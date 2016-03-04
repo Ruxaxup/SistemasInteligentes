@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import static modelo.ElementoDiscreto.Tipo.AGUA;
 import static modelo.ElementoDiscreto.Tipo.CAMARON;
+import static modelo.ElementoDiscreto.Tipo.JAIBA;
 /**
  *
  * @author Ruxaxup
@@ -36,12 +37,12 @@ public class ElementoDiscreto implements IElementoDiscreto{
     //Se guardaran 4 posiciones anteriores
     private List<Point> coordenadaAnterior;
     private long ciclos;
-    
+
 //JAIBA
-    private int direccion;
+    private int direccion=-1;
     boolean hungry;
     int comidos;
-    int contDir;
+    int contDir=0;
 
     
     
@@ -111,7 +112,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
         
         while(!posible && visitados.size() < 8){
             int vecino = rand.nextInt((max - min) + 1) + min;
-            if(contDir == 5){
+            if(contDir >= 3){
                 direccion = -1;
                 contDir = 0;
             }
@@ -165,7 +166,63 @@ public class ElementoDiscreto implements IElementoDiscreto{
         
         while(!posible && visitados.size() < 4){
             int vecino = rand.nextInt((max - min) + 1) + min;   
-            if(contDir == 10){
+            if(contDir >= 10){
+                direccion = -1;
+                contDir = 0;
+            }
+            if(direccion != -1){
+                vecino = direccion;
+                contDir++;
+            }
+            if(visitados.contains(vecino)){
+                continue;
+            }
+            try{
+                posVecino = getVecino(vecindario, i, j, vecino); 
+                direccion = vecino;
+                if(coordenadaAnterior.contains(posVecino)){
+                    visitados.add(new Integer(vecino));
+                    continue;
+                }
+                vecinoED = vecindario[posVecino.x][posVecino.y];
+                
+                if(vecinoED.getTipo() == AGUA){
+                    //Intercambio
+                    aux = vecindario[i][j];
+                    vecindario[i][j] = vecinoED;
+                    vecindario[posVecino.x][posVecino.y] = aux;
+                    posible = true;
+                }else{
+                    visitados.add(new Integer(vecino));
+                    contDir = 0;
+                    //resetear contador de direccion
+                }                
+            }catch(ArrayIndexOutOfBoundsException e){
+                posible = false;
+                visitados.add(new Integer(vecino));
+                //resetear contador de direccion
+                contDir = 0;
+            }
+        }       
+        
+        return posible;
+    }
+
+    public boolean moverAnguila(ElementoDiscreto[][] vecindario, int i, int j){
+        boolean posible = false;
+        Random rand = new Random();
+        //int randomNum = rand.nextInt((max - min) + 1) + min;
+        Point posVecino;
+        
+        ElementoDiscreto vecinoED, aux;
+        Set<Integer> visitados = new TreeSet<>();   
+
+        int min = 0;
+        int max = 7;
+        
+        while(!posible && visitados.size() < 8){
+            int vecino = rand.nextInt((max - min) + 1) + min;   
+            if(contDir >= 15){
                 direccion = -1;
                 contDir = 0;
             }
@@ -228,11 +285,32 @@ public class ElementoDiscreto implements IElementoDiscreto{
         return posible;
     }
     
+    public boolean comerJaiba(ElementoDiscreto[][] vecindario, int i, int j){
+        Point posVecinoCom;
+        ElementoDiscreto vecinoEDCom;
+        boolean posible = false;
+        for(int k=0;k<7;k++){
+            try{            
+                posVecinoCom = getVecino(vecindario, i, j, k); 
+                vecinoEDCom = vecindario[posVecinoCom.x][posVecinoCom.y];
+            
+                if(vecinoEDCom.getTipo() == JAIBA){
+                    vecinoEDCom.setTipo(AGUA);
+                    posible = true;
+                    break;
+                } 
+            }catch(ArrayIndexOutOfBoundsException e){
+
+            }
+        }
+        return posible;
+    }
+    
     private void mataJaiba(){
         setTipo(AGUA);
         ciclos = 0;
     }
-    
+
     @Override
     public void reglasInteraccion(ElementoDiscreto[][] vecindario, int i, int j) {
         switch (tipo) {
@@ -241,10 +319,10 @@ public class ElementoDiscreto implements IElementoDiscreto{
             case GARZA:
                 break;
             case JAIBA:
-                if(ciclos >= 480){
+                if(ciclos >= 192){ // 2 días
                     //muere
                     mataJaiba();
-                }else if(ciclos >= 16){
+                }else if(ciclos >= 48){ // cada 12 horas come
                     hungry = true;
                 }
                 if(hungry){                    
@@ -265,6 +343,29 @@ public class ElementoDiscreto implements IElementoDiscreto{
                 ciclos++;
                 break;
             case ANGUILA:
+                Random rand = new Random();  
+                int diasMuerte;
+                if(rand.nextBoolean()){
+                    diasMuerte=192;
+                }else{
+                    diasMuerte=96;
+                }
+                if(ciclos >= 192){//muere cada 2 días
+                    //muere
+                    mataJaiba();
+                }else if(ciclos >= 96){//Una jaiba cada día
+                    
+                        hungry = true;
+                }
+                if(hungry){                    
+                    if(moverAnguila(vecindario, i, j)){
+                        addLastPosition(new Point(i,j));
+                    }                
+                    if(comerJaiba(vecindario, i, j)){
+                        hungry = false;
+                        ciclos = 0;
+                    }
+                }
                 ciclos++;
                 break;
             
