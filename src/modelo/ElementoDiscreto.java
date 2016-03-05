@@ -355,8 +355,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
                     mataElemento();
                 }else if(ciclos >= 96){//Una jaiba cada día
                         hungry = true;
-                }
-                   
+                }   
                 if(hungry){                    
                     if(moverAnguila(vecindario, i, j)){
                         addLastPosition(new Point(i,j));
