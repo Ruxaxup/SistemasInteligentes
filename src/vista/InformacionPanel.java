@@ -38,7 +38,7 @@ public class InformacionPanel extends JPanel{
     }
     
     private void initComponents(){   
-        Font label = new Font("TimesRoman",Font.PLAIN,18);
+        Font label = new Font("TimesRoman",Font.PLAIN,14);
         vivos = new JLabel("Vivos: ");
         muertos = new JLabel("Muertos: ");
         

@@ -306,7 +306,7 @@ public class ElementoDiscreto implements IElementoDiscreto{
         return posible;
     }
     
-    private void mataJaiba(){
+    private void mataElemento(){
         setTipo(AGUA);
         ciclos = 0;
     }
@@ -319,16 +319,16 @@ public class ElementoDiscreto implements IElementoDiscreto{
             case GARZA:
                 break;
             case JAIBA:
-                if(ciclos >= 192){ // 2 días
+                if(ciclos >= 288){ // 3 días sin comer
                     //muere
-                    mataJaiba();
+                    mataElemento();
                 }else if(ciclos >= 48){ // cada 12 horas come
                     hungry = true;
                 }
                 if(hungry){                    
                     if(moverJaiba(vecindario, i, j)){
                         addLastPosition(new Point(i,j));
-                    }                
+                    }                        
                     if(comerCamaron(vecindario, i, j)){
                         hungry = false;
                         ciclos = 0;
@@ -350,17 +350,17 @@ public class ElementoDiscreto implements IElementoDiscreto{
                 }else{
                     diasMuerte=96;
                 }
-                if(ciclos >= 192){//muere cada 2 días
+                if(ciclos >= 480){//5 días sin comer
                     //muere
-                    mataJaiba();
+                    mataElemento();
                 }else if(ciclos >= 96){//Una jaiba cada día
-                    
                         hungry = true;
                 }
+                   
                 if(hungry){                    
                     if(moverAnguila(vecindario, i, j)){
                         addLastPosition(new Point(i,j));
-                    }                
+                    }             
                     if(comerJaiba(vecindario, i, j)){
                         hungry = false;
                         ciclos = 0;

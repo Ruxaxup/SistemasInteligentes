@@ -58,7 +58,7 @@ public class MainFrame extends JFrame implements ActionListener{
         setLayout(new GridBagLayout());       
         
         //Escenario de elementos discretos
-        escenarioP = new EscenarioPanel(new Dimension(700, 700), new Dimension(7,7));        
+        escenarioP = new EscenarioPanel(new Dimension(600, 600), new Dimension(6,6));        
         //Botones
         bStart = new JButton("Start");
         bStart.addActionListener(this);
@@ -69,7 +69,7 @@ public class MainFrame extends JFrame implements ActionListener{
         //Cuadros de información
         informacionCam = new InformacionPanel (new Dimension(200,70), "Camarones", Color.ORANGE);
         informacionJaiba = new InformacionPanel (new Dimension(200,70), "Jaibas", Color.RED);
-        informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas", Color.MAGENTA);
+        informacionAnguila = new InformacionPanel (new Dimension(200,70), "Anguilas", Color.WHITE);
         pTiempo = new PanelTiempo();
     }
     

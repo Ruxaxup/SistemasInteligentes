@@ -39,25 +39,33 @@ public class EscenarioPanel extends JPanel{
     private int threadSleep;
     
     //Generadores
-    private final int TIEMPO_CAMARON = 24;
-    private final int TIEMPO_JAIBA = 384;
-    private final int TIEMPO_ANGUILA = -1;
+    private final int TIEMPO_CAMARON = 96;  //aparecen Camarones cada 24 hrs
+    private final int TIEMPO_JAIBA = 192;   //aparecen Jaibas cada 2 días
+    private final int TIEMPO_ANGUILA = 672; //aparecen Anguilas cada 7 días
     long ciclosTotales = 0;
     
     public EscenarioPanel(Dimension size, Dimension ED_size){
         setPreferredSize(size);
-        threadSleep = 1;
+        threadSleep = 100;
         this.size = size;        
         this.ED_size = ED_size;
         ed = new ElementoDiscreto[size.width/ED_size.width][size.height/ED_size.height];
         ed = GeneraEcosistema.test(new Dimension(size.width/ED_size.width,
                                                  size.height/ED_size.height));
         //GeneraEcosistema.generaAgua(ed);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .1);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 2, .8);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .1);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 1, .2);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 2, .3);
         GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 3, .2);
-        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 4, .1);        
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.CAMARON, this, 4, .3);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 1, .05);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 2, .04);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 3, .05);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.JAIBA, this, 4, .04);
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 1, .01);  
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 2, .01); 
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 3, .02); 
+        GeneraEcosistema.GeneraEcosistema(ElementoDiscreto.Tipo.ANGUILA, this, 4, .01); 
+        
     }
     
     public void runPainter(JButton bStart, InformacionPanel cam,
@@ -95,15 +103,15 @@ public class EscenarioPanel extends JPanel{
             generaJaiba++;
             generaAnguila++;
             //Generadores
-            if(generaCam < TIEMPO_CAMARON){
+            if(generaCam > TIEMPO_CAMARON){
                 generaEspecie(Tipo.CAMARON);
                 generaCam = 0;
             }
-            if(generaJaiba < TIEMPO_JAIBA){
+            if(generaJaiba > TIEMPO_JAIBA){
                 generaEspecie(Tipo.JAIBA);
                 generaJaiba = 0;
             }
-            if(generaAnguila < TIEMPO_ANGUILA){
+            if(generaAnguila > TIEMPO_ANGUILA){
                 generaEspecie(Tipo.ANGUILA);
                 generaAnguila = 0;
             }
@@ -159,7 +167,7 @@ public class EscenarioPanel extends JPanel{
                 c = Color.ORANGE;
                 break;            
             case ANGUILA:
-                c = Color.MAGENTA;
+                c = Color.WHITE;
                 break;
             default:
                 throw new AssertionError(ed.getTipo().name());
